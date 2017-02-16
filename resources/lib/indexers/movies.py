@@ -45,6 +45,7 @@ class movies:
 
         self.imdb_link = 'http://www.imdb.com'
         self.trakt_link = 'http://api-v2launch.trakt.tv'
+        self.tvdb_link = 'http://thetvdb.com'
         self.datetime = (datetime.datetime.utcnow() - datetime.timedelta(hours = 5))
         self.systime = (self.datetime).strftime('%Y%m%d%H%M%S%f')
         self.trakt_user = control.setting('trakt.user').strip()
@@ -54,42 +55,42 @@ class movies:
         self.user = str(control.setting('fanart.tv.user')) + str(control.setting('tm.user'))
         self.lang = control.apiLanguage()['trakt']
 
-        self.search_link = 'http://api-v2launch.trakt.tv/search?type=movie&limit=20&page=1&query='
+        self.search_link = self.trakt_link + '/search?type=movie&limit=20&page=1&query='
         self.imdb_info_link = 'http://www.omdbapi.com/?i=%s&plot=full&r=json'
-        self.trakt_info_link = 'http://api-v2launch.trakt.tv/movies/%s'
-        self.trakt_lang_link = 'http://api-v2launch.trakt.tv/movies/%s/translations/%s'
+        self.trakt_info_link = self.trakt_link + '/movies/%s'
+        self.trakt_lang_link = self.trakt_link + '/movies/%s/translations/%s'
         self.fanart_tv_art_link = 'http://webservice.fanart.tv/v3/movies/%s'
         self.fanart_tv_level_link = 'http://webservice.fanart.tv/v3/level'
         self.tm_art_link = 'http://api.themoviedb.org/3/movie/%s/images?api_key=' + self.tm_user
         self.tm_img_link = 'https://image.tmdb.org/t/p/w%s%s'
 
-        self.persons_link = 'http://www.imdb.com/search/name?count=100&name='
-        self.personlist_link = 'http://www.imdb.com/search/name?count=100&gender=male,female'
-        self.popular_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&num_votes=1000,&production_status=released&groups=top_1000&sort=moviemeter,asc&count=40&start=1'
-        self.views_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&num_votes=1000,&production_status=released&sort=num_votes,desc&count=40&start=1'
-        self.featured_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&num_votes=1000,&production_status=released&release_date=date[365],date[60]&sort=moviemeter,asc&count=40&start=1'
-        self.person_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&production_status=released&role=%s&sort=year,desc&count=40&start=1'
-        self.genre_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&num_votes=100,&release_date=date[730],date[30]&genres=%s&sort=moviemeter,asc&count=40&start=1'
-        self.language_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&num_votes=100,&production_status=released&languages=%s&sort=moviemeter,asc&count=40&start=1'
-        self.certification_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&num_votes=100,&production_status=released&certificates=us:%s&sort=moviemeter,asc&count=40&start=1'
-        self.year_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&num_votes=100,&production_status=released&year=%s,%s&sort=moviemeter,asc&count=40&start=1'
-        self.boxoffice_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&production_status=released&sort=boxoffice_gross_us,desc&count=40&start=1'
-        self.oscars_link = 'http://www.imdb.com/search/title?title_type=feature,tv_movie&production_status=released&groups=oscar_best_picture_winners&sort=year,desc&count=40&start=1'
-        self.theaters_link = 'http://www.imdb.com/search/title?title_type=feature&num_votes=1000,&release_date=date[365],date[0]&sort=release_date_us,desc&count=40&start=1'
-        self.trending_link = 'http://api-v2launch.trakt.tv/movies/trending?limit=40&page=1'
+        self.persons_link = self.imdb_link + '/search/name?count=100&name='
+        self.personlist_link = self.imdb_link + '/search/name?count=100&gender=male,female'
+        self.popular_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&num_votes=1000,&production_status=released&groups=top_1000&sort=moviemeter,asc&count=40&start=1'
+        self.views_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&num_votes=1000,&production_status=released&sort=num_votes,desc&count=40&start=1'
+        self.featured_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&num_votes=1000,&production_status=released&release_date=date[365],date[60]&sort=moviemeter,asc&count=40&start=1'
+        self.person_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&production_status=released&role=%s&sort=year,desc&count=40&start=1'
+        self.genre_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&num_votes=100,&release_date=date[730],date[30]&genres=%s&sort=moviemeter,asc&count=40&start=1'
+        self.language_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&num_votes=100,&production_status=released&languages=%s&sort=moviemeter,asc&count=40&start=1'
+        self.certification_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&num_votes=100,&production_status=released&certificates=us:%s&sort=moviemeter,asc&count=40&start=1'
+        self.year_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&num_votes=100,&production_status=released&year=%s,%s&sort=moviemeter,asc&count=40&start=1'
+        self.boxoffice_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&production_status=released&sort=boxoffice_gross_us,desc&count=40&start=1'
+        self.oscars_link = self.imdb_link + '/search/title?title_type=feature,tv_movie&production_status=released&groups=oscar_best_picture_winners&sort=year,desc&count=40&start=1'
+        self.theaters_link = self.imdb_link + '/search/title?title_type=feature&num_votes=1000,&release_date=date[365],date[0]&sort=release_date_us,desc&count=40&start=1'
+        self.trending_link = self.trakt_link + '/movies/trending?limit=40&page=1'
 
-        self.traktlists_link = 'http://api-v2launch.trakt.tv/users/me/lists'
-        self.traktlikedlists_link = 'http://api-v2launch.trakt.tv/users/likes/lists?limit=1000000'
-        self.traktlist_link = 'http://api-v2launch.trakt.tv/users/%s/lists/%s/items'
-        self.traktcollection_link = 'http://api-v2launch.trakt.tv/users/me/collection/movies'
-        self.traktwatchlist_link = 'http://api-v2launch.trakt.tv/users/me/watchlist/movies'
-        self.traktfeatured_link = 'http://api-v2launch.trakt.tv/recommendations/movies?limit=40'
-        self.trakthistory_link = 'http://api-v2launch.trakt.tv/users/me/history/movies?limit=40&page=1'
-        self.imdblists_link = 'http://www.imdb.com/user/ur%s/lists?tab=all&sort=modified:desc&filter=titles' % self.imdb_user
-        self.imdblist_link = 'http://www.imdb.com/list/%s/?view=detail&sort=title:asc&title_type=feature,short,tv_movie,tv_special,video,documentary,game&start=1'
-        self.imdblist2_link = 'http://www.imdb.com/list/%s/?view=detail&sort=created:desc&title_type=feature,short,tv_movie,tv_special,video,documentary,game&start=1'
-        self.imdbwatchlist_link = 'http://www.imdb.com/user/ur%s/watchlist?sort=alpha,asc' % self.imdb_user
-        self.imdbwatchlist2_link = 'http://www.imdb.com/user/ur%s/watchlist?sort=date_added,desc' % self.imdb_user
+        self.traktlists_link = self.trakt_link + '/users/me/lists'
+        self.traktlikedlists_link = self.trakt_link + '/users/likes/lists?limit=1000000'
+        self.traktlist_link = self.trakt_link + '/users/%s/lists/%s/items'
+        self.traktcollection_link = self.trakt_link + '/users/me/collection/movies'
+        self.traktwatchlist_link = self.trakt_link + '/users/me/watchlist/movies'
+        self.traktfeatured_link = self.trakt_link + '/recommendations/movies?limit=40'
+        self.trakthistory_link = self.trakt_link + '/users/me/history/movies?limit=40&page=1'
+        self.imdblists_link = self.imdb_link + '/user/ur%s/lists?tab=all&sort=modified:desc&filter=titles' % self.imdb_user
+        self.imdblist_link = self.imdb_link + '/list/%s/?view=detail&sort=title:asc&title_type=feature,short,tv_movie,tv_special,video,documentary,game&start=1'
+        self.imdblist2_link = self.imdb_link + '/list/%s/?view=detail&sort=created:desc&title_type=feature,short,tv_movie,tv_special,video,documentary,game&start=1'
+        self.imdbwatchlist_link = self.imdb_link + '/user/ur%s/watchlist?sort=alpha,asc' % self.imdb_user
+        self.imdbwatchlist2_link = self.imdb_link + '/user/ur%s/watchlist?sort=date_added,desc' % self.imdb_user
 
 
     def get(self, url, idx=True):

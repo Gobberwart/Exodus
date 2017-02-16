@@ -45,14 +45,14 @@ class seasons:
         self.lang = control.apiLanguage()['tvdb']
         self.datetime = (datetime.datetime.utcnow() - datetime.timedelta(hours = 5))
         self.today_date = (self.datetime).strftime('%Y-%m-%d')
+        self.tvdb_link = 'http://thetvdb.com'
         self.tvdb_key = 'MUQ2MkYyRjkwMDMwQzQ0NA=='
-
-        self.tvdb_info_link = 'http://thetvdb.com/api/%s/series/%s/all/%s.zip' % (self.tvdb_key.decode('base64'), '%s', '%s')
-        self.tvdb_by_imdb = 'http://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=%s'
-        self.tvdb_by_query = 'http://thetvdb.com/api/GetSeries.php?seriesname=%s'
+        self.tvdb_info_link = self.tvdb_link + '/api/%s/series/%s/all/%s.zip' % (self.tvdb_key.decode('base64'), '%s', '%s')
+        self.tvdb_by_imdb = self.tvdb_link + '/api/GetSeriesByRemoteID.php?imdbid=%s'
+        self.tvdb_by_query = self.tvdb_link + '/api/GetSeries.php?seriesname=%s'
         self.imdb_by_query = 'http://www.omdbapi.com/?t=%s&y=%s'
-        self.tvdb_image = 'http://thetvdb.com/banners/'
-        self.tvdb_poster = 'http://thetvdb.com/banners/_cache/'
+        self.tvdb_image = self.tvdb_link + '/banners/'
+        self.tvdb_poster = self.tvdb_link + '/banners/_cache/'
 
 
     def get(self, tvshowtitle, year, imdb, tvdb, idx=True):
@@ -69,6 +69,7 @@ class seasons:
 
 
     def tvdb_list(self, tvshowtitle, year, imdb, tvdb, lang, limit=''):
+        print '~~~~~~~~~~~~~~~~~~~TVDB LIST~~~~~~~~~~~~~~~~~~~~~~~~'
         try:
             if imdb == '0':
                 url = self.imdb_by_query % (urllib.quote_plus(tvshowtitle), year)
@@ -106,6 +107,7 @@ class seasons:
                 tvdb = client.replaceHTMLCodes(tvdb)
                 tvdb = client.parseDOM(tvdb, 'Series')
                 tvdb = [(x, client.parseDOM(x, 'SeriesName'), client.parseDOM(x, 'FirstAired')) for x in tvdb]
+                print json.dumps(tvdb)
                 tvdb = [(x, x[1][0], x[2][0]) for x in tvdb if len(x[1]) > 0 and len(x[2]) > 0]
                 tvdb = [x for x in tvdb if cleantitle.get(tvshowtitle) == cleantitle.get(x[1])]
                 tvdb = [x[0][0] for x in tvdb if any(y in x[2] for y in years)][0]
@@ -417,6 +419,8 @@ class seasons:
         labelMenu = control.lang(32055).encode('utf-8')
 
 
+        print json.dumps(items)
+        
         for i in items:
             try:
                 label = '%s %s' % (labelMenu, i['season'])
@@ -506,6 +510,7 @@ class episodes:
 
         self.trakt_link = 'http://api-v2launch.trakt.tv'
         self.tvmaze_link = 'http://api.tvmaze.com'
+        self.tvdb_link = 'http://thetvdb.com'
         self.tvdb_key = 'MUQ2MkYyRjkwMDMwQzQ0NA=='
         self.datetime = (datetime.datetime.utcnow() - datetime.timedelta(hours = 5))
         self.systime = (self.datetime).strftime('%Y%m%d%H%M%S%f')
@@ -513,20 +518,20 @@ class episodes:
         self.trakt_user = control.setting('trakt.user').strip()
         self.lang = control.apiLanguage()['tvdb']
 
-        self.tvdb_info_link = 'http://thetvdb.com/api/%s/series/%s/all/%s.zip' % (self.tvdb_key.decode('base64'), '%s', '%s')
-        self.tvdb_image = 'http://thetvdb.com/banners/'
-        self.tvdb_poster = 'http://thetvdb.com/banners/_cache/'
+        self.tvdb_info_link = self.tvdb_link + '/api/%s/series/%s/all/%s.zip' % (self.tvdb_key.decode('base64'), '%s', '%s')
+        self.tvdb_image = self.tvdb_link + '/banners/'
+        self.tvdb_poster = self.tvdb_link + '/banners/_cache/'
 
         self.added_link = 'http://api.tvmaze.com/schedule'
-        self.mycalendar_link = 'http://api-v2launch.trakt.tv/calendars/my/shows/date[29]/60/'
-        self.trakthistory_link = 'http://api-v2launch.trakt.tv/users/me/history/shows?limit=300'
-        self.progress_link = 'http://api-v2launch.trakt.tv/users/me/watched/shows'
-        self.hiddenprogress_link = 'http://api-v2launch.trakt.tv/users/hidden/progress_watched?limit=1000&type=show'
+        self.mycalendar_link = self.trakt_link + '/calendars/my/shows/date[29]/60/'
+        self.trakthistory_link = self.trakt_link + '/users/me/history/shows?limit=300'
+        self.progress_link = self.trakt_link + '/users/me/watched/shows'
+        self.hiddenprogress_link = self.trakt_link + '/users/hidden/progress_watched?limit=1000&type=show'
         self.calendar_link = 'http://api.tvmaze.com/schedule?date=%s'
 
-        self.traktlists_link = 'http://api-v2launch.trakt.tv/users/me/lists'
-        self.traktlikedlists_link = 'http://api-v2launch.trakt.tv/users/likes/lists?limit=1000000'
-        self.traktlist_link = 'http://api-v2launch.trakt.tv/users/%s/lists/%s/items'
+        self.traktlists_link = self.trakt_link + '/users/me/lists'
+        self.traktlikedlists_link = self.trakt_link + '/users/likes/lists?limit=1000000'
+        self.traktlist_link = self.trakt_link + '/users/%s/lists/%s/items'
 
 
     def get(self, tvshowtitle, year, imdb, tvdb, season=None, episode=None, idx=True):
@@ -582,7 +587,6 @@ class episodes:
 
             elif self.tvmaze_link in url:
                 self.list = cache.get(self.tvmaze_list, 1, url, False)
-
 
             self.episodeDirectory(self.list)
             return self.list
@@ -666,6 +670,7 @@ class episodes:
 
 
     def trakt_list(self, url, user):
+        print '~~~~~~~~~~~~~~~~~TRAKT LIST~~~~~~~~~~~~~~~~'
         try:
             for i in re.findall('date\[(\d+)\]', url):
                 url = url.replace('date[%s]' % i, (self.datetime - datetime.timedelta(days = int(i))).strftime('%Y-%m-%d'))
@@ -691,7 +696,11 @@ class episodes:
 
                 season = item['episode']['season']
                 season = re.sub('[^0-9]', '', '%01d' % int(season))
-                if season == '0': raise Exception()
+                if season == '0': 
+                    print item['show']['title']
+                    print item['episode']['season']
+                    print item['episode']['title']
+                    #raise Exception()
                 season = season.encode('utf-8')
 
                 episode = item['episode']['number']
@@ -761,7 +770,8 @@ class episodes:
                 plot = plot.encode('utf-8')
 
                 itemlist.append({'title': title, 'season': season, 'episode': episode, 'tvshowtitle': tvshowtitle, 'year': year, 'premiered': premiered, 'status': 'Continuing', 'studio': studio, 'genre': genre, 'duration': duration, 'rating': rating, 'votes': votes, 'mpaa': mpaa, 'plot': plot, 'imdb': imdb, 'tvdb': tvdb, 'poster': '0', 'thumb': '0'})
-            except:
+            except Exception as e:
+                print e.message, e.args
                 pass
 
         itemlist = itemlist[::-1]
@@ -779,23 +789,30 @@ class episodes:
             return
 
         for item in result:
+            
             try:
-                num_1 = 0
-                for i in range(0, len(item['seasons'])): num_1 += len(item['seasons'][i]['episodes'])
-                num_2 = int(item['show']['aired_episodes'])
-                if num_1 >= num_2: raise Exception()
-
-                season = str(item['seasons'][-1]['number'])
-                season = season.encode('utf-8')
-
-                episode = str(item['seasons'][-1]['episodes'][-1]['number'])
-                episode = episode.encode('utf-8')
-
+                # Check for views > available episodes... is this actually needed?
+                #num_1 = 0
+                #for i in range(0, len(item['seasons'])): 
+                #    if item['seasons'][i]['number'] > 0: num_1 += len(item['seasons'][i]['episodes'])
+                #num_2 = int(item['show']['aired_episodes'])
+                #if num_1 >= num_2: raise Exception()
+               
                 tvshowtitle = item['show']['title']
                 if tvshowtitle == None or tvshowtitle == '': raise Exception()
                 tvshowtitle = client.replaceHTMLCodes(tvshowtitle)
                 tvshowtitle = tvshowtitle.encode('utf-8')
 
+                season = str(item['seasons'][-1]['number'])
+                season = season.encode('utf-8')
+                #if season == '0': raise Exception()
+                                
+                #episode = str(item['seasons'][-1]['episodes'][-1]['number'])
+                episodeitems = [x for x in item['seasons'][-1]['episodes'] if 'number' in x]
+                episodeitems = sorted(episodeitems, key=lambda x:x['number'])
+                episode = episodeitems[-1]['number']
+                episode = str(episode).encode('utf-8')
+                
                 year = item['show']['year']
                 year = re.sub('[^0-9]', '', str(year))
                 if int(year) > int(self.datetime.strftime('%Y')): raise Exception()
@@ -810,7 +827,8 @@ class episodes:
                 tvdb = tvdb.encode('utf-8')
 
                 items.append({'imdb': imdb, 'tvdb': tvdb, 'tvshowtitle': tvshowtitle, 'year': year, 'snum': season, 'enum': episode})
-            except:
+            except Exception as e:
+                print str(e)
                 pass
 
         try:
@@ -825,7 +843,6 @@ class episodes:
         def items_list(i):
             try:
                 item = [x for x in self.blist if x['tvdb'] == i['tvdb'] and x['snum'] == i['snum'] and x['enum'] == i['enum']][0]
-                item['action'] = 'episodes'
                 self.list.append(item)
                 return
             except:
