@@ -69,7 +69,6 @@ class seasons:
 
 
     def tvdb_list(self, tvshowtitle, year, imdb, tvdb, lang, limit=''):
-        print '~~~~~~~~~~~~~~~~~~~TVDB LIST~~~~~~~~~~~~~~~~~~~~~~~~'
         try:
             if imdb == '0':
                 url = self.imdb_by_query % (urllib.quote_plus(tvshowtitle), year)
@@ -107,7 +106,6 @@ class seasons:
                 tvdb = client.replaceHTMLCodes(tvdb)
                 tvdb = client.parseDOM(tvdb, 'Series')
                 tvdb = [(x, client.parseDOM(x, 'SeriesName'), client.parseDOM(x, 'FirstAired')) for x in tvdb]
-                print json.dumps(tvdb)
                 tvdb = [(x, x[1][0], x[2][0]) for x in tvdb if len(x[1]) > 0 and len(x[2]) > 0]
                 tvdb = [x for x in tvdb if cleantitle.get(tvshowtitle) == cleantitle.get(x[1])]
                 tvdb = [x[0][0] for x in tvdb if any(y in x[2] for y in years)][0]
@@ -419,8 +417,6 @@ class seasons:
         labelMenu = control.lang(32055).encode('utf-8')
 
 
-        print json.dumps(items)
-        
         for i in items:
             try:
                 label = '%s %s' % (labelMenu, i['season'])
@@ -670,7 +666,6 @@ class episodes:
 
 
     def trakt_list(self, url, user):
-        print '~~~~~~~~~~~~~~~~~TRAKT LIST~~~~~~~~~~~~~~~~'
         try:
             for i in re.findall('date\[(\d+)\]', url):
                 url = url.replace('date[%s]' % i, (self.datetime - datetime.timedelta(days = int(i))).strftime('%Y-%m-%d'))
@@ -696,11 +691,6 @@ class episodes:
 
                 season = item['episode']['season']
                 season = re.sub('[^0-9]', '', '%01d' % int(season))
-                if season == '0': 
-                    print item['show']['title']
-                    print item['episode']['season']
-                    print item['episode']['title']
-                    #raise Exception()
                 season = season.encode('utf-8')
 
                 episode = item['episode']['number']
@@ -770,8 +760,7 @@ class episodes:
                 plot = plot.encode('utf-8')
 
                 itemlist.append({'title': title, 'season': season, 'episode': episode, 'tvshowtitle': tvshowtitle, 'year': year, 'premiered': premiered, 'status': 'Continuing', 'studio': studio, 'genre': genre, 'duration': duration, 'rating': rating, 'votes': votes, 'mpaa': mpaa, 'plot': plot, 'imdb': imdb, 'tvdb': tvdb, 'poster': '0', 'thumb': '0'})
-            except Exception as e:
-                print e.message, e.args
+            except:
                 pass
 
         itemlist = itemlist[::-1]
@@ -792,11 +781,11 @@ class episodes:
             
             try:
                 # Check for views > available episodes... is this actually needed?
-                #num_1 = 0
+                #watched_episodes = 0
                 #for i in range(0, len(item['seasons'])): 
-                #    if item['seasons'][i]['number'] > 0: num_1 += len(item['seasons'][i]['episodes'])
-                #num_2 = int(item['show']['aired_episodes'])
-                #if num_1 >= num_2: raise Exception()
+                #    if item['seasons'][i]['number'] > 0: watched_episodes += len(item['seasons'][i]['episodes'])
+                #aired_episodes = int(item['show']['aired_episodes'])
+                #if watched_episodes >= aired_episodes: raise Exception()
                
                 tvshowtitle = item['show']['title']
                 if tvshowtitle == None or tvshowtitle == '': raise Exception()
@@ -805,9 +794,7 @@ class episodes:
 
                 season = str(item['seasons'][-1]['number'])
                 season = season.encode('utf-8')
-                #if season == '0': raise Exception()
                                 
-                #episode = str(item['seasons'][-1]['episodes'][-1]['number'])
                 episodeitems = [x for x in item['seasons'][-1]['episodes'] if 'number' in x]
                 episodeitems = sorted(episodeitems, key=lambda x:x['number'])
                 episode = episodeitems[-1]['number']
@@ -827,8 +814,7 @@ class episodes:
                 tvdb = tvdb.encode('utf-8')
 
                 items.append({'imdb': imdb, 'tvdb': tvdb, 'tvshowtitle': tvshowtitle, 'year': year, 'snum': season, 'enum': episode})
-            except Exception as e:
-                print str(e)
+            except:
                 pass
 
         try:
